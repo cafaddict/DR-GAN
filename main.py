@@ -17,8 +17,6 @@ from util.DataAugmentation import ResizeDemo
 from train_single_DRGAN import train_single_DRGAN
 from train_multiple_DRGAN import train_multiple_DRGAN
 from skimage import io, transform
-from matplotlib import pylab as plt
-%matplotlib inline
 from tqdm import tqdm
 from Generate_Image import Generate_Image
 import pdb
