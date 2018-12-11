@@ -91,7 +91,11 @@ def DataLoader(image_dir):
             id_labels[count] = i
             pose_labels[count] = 1
             count = count + 1
-        
+    
+    print("Not Dead2!")
+    print(id_labels)
+    print(pose_labels)
+
     id_labels = id_labels.astype('int64')
     pose_labels = pose_labels.astype('int64')
 
@@ -106,8 +110,11 @@ def DataLoader(image_dir):
     id_labels = id_labels[:gray_count*-1]
     pose_labels = pose_labels[:gray_count*-1]
 
+    print("Not Dead3!")
     Np = int(pose_labels.max() + 1)
     Nd = int(id_labels.max() + 1)
+
+    print([images, id_labels, pose_labels, Nd, Np, Nz, channel_num])
 
 
     return [images, id_labels, pose_labels, Nd, Np, Nz, channel_num]
