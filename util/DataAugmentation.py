@@ -51,6 +51,45 @@ class Resize(object):
         return resized_image
 
 
+class ResizeDemo(object):
+    #  assume image  as H x W x C numpy array
+    def __init__(self, output_size):
+        assert isinstance(output_size, int)
+        self.output_size = output_size
+        
+    def __call__(self, image):
+        h, w = image.shape[:2]
+        if h > w:
+            new_h, new_w = self.output_size, int(self.output_size * w / h)
+        else:
+            new_h, new_w = int(self.output_size * h / w), self.output_size
+
+        resized_image = transform.resize(image, (new_h, new_w))
+        
+        if h>w:
+            diff = self.output_size - new_w
+            if diff%2 == 0:
+                pad_l = int(diff/2)
+                pad_s = int(diff/2)
+            else:
+                pad_l = int(diff/2)+1
+                pad_s = int(diff/2)
+
+            padded_image = np.lib.pad(resized_image, ((0,0), (pad_l,pad_s), (0,0)), 'edge')
+
+        else:
+            diff = self.output_size - new_h
+            if diff%2==0:
+                pad_l = int(diff/2)
+                pad_s = int(diff/2)
+            else:
+                pad_l = int(diff/2)+1
+                pad_s = int(diff/2)
+
+            padded_image = np.lib.pad(resized_image, ((pad_l,pad_s), (0,0),  (0,0)), 'edge')
+
+        return padded_image
+
 class RandomCrop(object):
 
     #  assume image  as C x H x W  numpy array

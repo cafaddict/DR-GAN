@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import sys
+sys.path.append('..')
 
 import os
 import argparse
 import datetime
+import glob
 import numpy as np
 import torch
 from torch import nn, optim
@@ -11,13 +14,14 @@ from torch.autograd import Variable
 from model import single_DR_GAN_model as single_model
 from model import multiple_DR_GAN_model as multi_model
 from util.create_randomdata import create_randomdata
+from util.DataAugmentation import ResizeDemo
 from train_single_DRGAN import train_single_DRGAN
 from train_multiple_DRGAN import train_multiple_DRGAN
 from Generate_Image import Generate_Image
 import pdb
 
 
-def DataLoader(data_place):
+def DataLoader(image_dir):
     """
     Define dataloder which is applicable to your data
     
@@ -38,15 +42,69 @@ def DataLoader(data_place):
     # id_labels = []
     # pose_labels = []
 
-    # mycase
+    # Demo
+    rsz = Resize(110)
+    Indv_dir = []
+    for x in os.listdir(image_dir):
+        if os.path.isdir(os.path.join(image_dir, x)):
+            Indv_dir.append(x)
+            
+    Indv_dir=np.sort(Indv_dir)
+
+    images = np.zeros((7000, 110, 110, 3))
+    id_labels = np.zeros(7000)
+    pose_labels = np.zeros(7000)
+    count = 0
+    gray_count = 0
+
     Nz = 50
     channel_num = 3
-    images = np.load('{}/images.npy'.format(data_place))
-    id_labels = np.load('{}/ids.npy'.format(data_place))
-    pose_labels = np.load('{}/yaws.npy'.format(data_place))
+    for i in tqdm(range(len(Indv_dir))):
+        Frontal_dir = os.path.join(image_dir, Indv_dir[i], 'frontal')
+        Profile_dir = os.path.join(image_dir, Indv_dir[i], 'profile')
+        
+        front_img_files = os.listdir(Frontal_dir)
+        prof_img_files = os.listdir(Profile_dir)
+        
+        for img_file in front_img_files:
+            img = io.imread(os.path.join(Frontal_dir, img_file))
+            if len(img.shape)==2:
+                gray_count = gray_count+1
+                continue
+            img_rsz = rsz(img)
+            images[count] = img_rsz
+            id_labels[count] = i
+            pose_labels[count] = 0
+            count = count + 1
+        
+        for img_file in prof_img_files:
+            img = io.imread(os.path.join(Profile_dir, img_file))
+            if len(img.shape)==2:
+                gray_count = gray_count+1
+                continue
+            img_rsz = rsz(img)
+            images[count] = img_rsz
+            id_labels[count] = i
+            pose_labels[count] = 1
+            count = count + 1
+        
+    id_labels = id_labels.astype('int64')
+    pose_labels = pose_labels.astype('int64')
+
+    #[0,255] -> [-1,1]
+    images = images *2 - 1
+    # RGB -> BGR
+    images = images[:,:,:,[2,1,0]]
+    # B x H x W x C-> B x C x H x W
+    images = images.transpose(0, 3, 1, 2)
+
+    images = images[:gray_count*-1]
+    id_labels = id_labels[:gray_count*-1]
+    pose_labels = pose_labels[:gray_count*-1]
 
     Np = int(pose_labels.max() + 1)
     Nd = int(id_labels.max() + 1)
+
 
     return [images, id_labels, pose_labels, Nd, Np, Nz, channel_num]
 
