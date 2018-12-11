@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
-import sys
-sys.path.append('..')
+
 
 import os
 import argparse
@@ -43,7 +42,7 @@ def DataLoader(image_dir):
     # pose_labels = []
 
     # Demo
-    rsz = Resize(110)
+    rsz = ResizeDemo(110)
     Indv_dir = []
     for x in os.listdir(image_dir):
         if os.path.isdir(os.path.join(image_dir, x)):
