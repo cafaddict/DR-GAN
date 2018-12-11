@@ -51,6 +51,8 @@ def DataLoader(image_dir):
             
     Indv_dir=np.sort(Indv_dir)
 
+    print(Indv_dir)
+
     images = np.zeros((7000, 110, 110, 3))
     id_labels = np.zeros(7000)
     pose_labels = np.zeros(7000)
@@ -59,6 +61,8 @@ def DataLoader(image_dir):
 
     Nz = 50
     channel_num = 3
+
+    print("Not Dead!")
     for i in tqdm(range(len(Indv_dir))):
         Frontal_dir = os.path.join(image_dir, Indv_dir[i], 'frontal')
         Profile_dir = os.path.join(image_dir, Indv_dir[i], 'profile')
