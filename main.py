@@ -53,8 +53,6 @@ def DataLoader(image_dir):
             
     Indv_dir=np.sort(Indv_dir)
 
-    print(Indv_dir)
-
     images = np.zeros((7000, 110, 110, 3))
     id_labels = np.zeros(7000)
     pose_labels = np.zeros(7000)
