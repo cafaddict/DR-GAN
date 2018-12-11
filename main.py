@@ -44,7 +44,7 @@ def DataLoader(image_dir):
     # pose_labels = []
 
     # Demo
-    image_dir = "cfp-dataset/Data/Images/"
+    # image_dir = "cfp-dataset/Data/Images/"
     rsz = ResizeDemo(110)
     Indv_dir = []
     for x in os.listdir(image_dir):
@@ -64,7 +64,6 @@ def DataLoader(image_dir):
     Nz = 50
     channel_num = 3
 
-    print("Not Dead!")
     for i in tqdm(range(len(Indv_dir))):
         Frontal_dir = os.path.join(image_dir, Indv_dir[i], 'frontal')
         Profile_dir = os.path.join(image_dir, Indv_dir[i], 'profile')
@@ -93,10 +92,6 @@ def DataLoader(image_dir):
             id_labels[count] = i
             pose_labels[count] = 1
             count = count + 1
-    
-    print("Not Dead2!")
-    print(id_labels)
-    print(pose_labels)
 
     id_labels = id_labels.astype('int64')
     pose_labels = pose_labels.astype('int64')
@@ -112,12 +107,8 @@ def DataLoader(image_dir):
     id_labels = id_labels[:gray_count*-1]
     pose_labels = pose_labels[:gray_count*-1]
 
-    print("Not Dead3!")
     Np = int(pose_labels.max() + 1)
     Nd = int(id_labels.max() + 1)
-
-    print([images, id_labels, pose_labels, Nd, Np, Nz, channel_num])
-
 
     return [images, id_labels, pose_labels, Nd, Np, Nz, channel_num]
 
