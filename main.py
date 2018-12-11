@@ -42,6 +42,7 @@ def DataLoader(image_dir):
     # pose_labels = []
 
     # Demo
+    image_dir = "cfp-dataset/Data/Images/"
     rsz = ResizeDemo(110)
     Indv_dir = []
     for x in os.listdir(image_dir):
