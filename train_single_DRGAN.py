@@ -144,7 +144,7 @@ def Learn_D(D_model, loss_criterion, loss_criterion_gan, optimizer_D, batch_imag
 
     d_loss.backward()
     optimizer_D.step()
-    log_learning(epoch, steps, 'D', d_loss.data[0], args)
+    log_learning(epoch, steps, 'D', d_loss.item(), args)
 
     # Discriminator の強さを判別
     flag_D_strong = Is_D_strong(real_output, syn_output, batch_id_label, batch_pose_label, Nd)
@@ -167,4 +167,4 @@ def Learn_G(D_model, loss_criterion, loss_criterion_gan, optimizer_G ,generated,
 
     g_loss.backward()
     optimizer_G.step()
-    log_learning(epoch, steps, 'G', g_loss.data[0], args)
+    log_learning(epoch, steps, 'G', g_loss.item(), args)
