@@ -54,8 +54,9 @@ def DataLoader(image_dir):
     gray_count = 0
     with open('test_posetemp_imglist.txt') as f:
         for line in f:
-            print(line)
-            img = io.imread(os.path.join("test/", line))
+            img_path = os.path.join('test/', line)
+            print(img_path)
+            img = io.imread(img_path)
             if len(img.shape)==2:
                 gray_count = gray_count+1
                 continue
