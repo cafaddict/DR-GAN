@@ -46,12 +46,6 @@ def DataLoader(image_dir):
     # Demo
     # image_dir = "cfp-dataset/Data/Images/"
     rsz = ResizeDemo(110)
-    Indv_dir = []
-    for x in os.listdir(image_dir):
-        if os.path.isdir(os.path.join(image_dir, x)):
-            Indv_dir.append(x)
-            
-    Indv_dir=np.sort(Indv_dir)
 
     images = np.zeros((7000, 110, 110, 3))
     id_labels = np.zeros(7000)
@@ -59,36 +53,16 @@ def DataLoader(image_dir):
     count = 0
     gray_count = 0
 
-    Nz = 50
-    channel_num = 3
-
-    for i in tqdm(range(len(Indv_dir))):
-        Frontal_dir = os.path.join(image_dir, Indv_dir[i], 'frontal')
-        Profile_dir = os.path.join(image_dir, Indv_dir[i], 'profile')
-        
-        front_img_files = os.listdir(Frontal_dir)
-        prof_img_files = os.listdir(Profile_dir)
-        
-        for img_file in front_img_files:
-            img = io.imread(os.path.join(Frontal_dir, img_file))
+    with open('test_posetemp_imglist.txt') as f:
+        for line in f:
+            img = io.imread(os.path.join("test/", line))
             if len(img.shape)==2:
                 gray_count = gray_count+1
                 continue
             img_rsz = rsz(img)
             images[count] = img_rsz
-            id_labels[count] = i
-            pose_labels[count] = 0
-            count = count + 1
-        
-        for img_file in prof_img_files:
-            img = io.imread(os.path.join(Profile_dir, img_file))
-            if len(img.shape)==2:
-                gray_count = gray_count+1
-                continue
-            img_rsz = rsz(img)
-            images[count] = img_rsz
-            id_labels[count] = i
-            pose_labels[count] = 1
+            id_labels[count] = line.split("/")[0]
+            pose_labels[count] = ((count % 30) // 10) / 2
             count = count + 1
 
     id_labels = id_labels.astype('int64')
@@ -104,9 +78,10 @@ def DataLoader(image_dir):
     images = images[:gray_count*-1]
     id_labels = id_labels[:gray_count*-1]
     pose_labels = pose_labels[:gray_count*-1]
-
-    Np = int(pose_labels.max() + 1)
     Nd = int(id_labels.max() + 1)
+    Np = int(pose_labels.max() + 1)
+    Nz = 50
+    channel_num = 3
 
     return [images, id_labels, pose_labels, Nd, Np, Nz, channel_num]
 
