@@ -53,17 +53,16 @@ def DataLoader(image_dir):
     count = 0
     gray_count = 0
 
-    files = []
-    with open('test_posetemp_imglist.txt') as f:
-        for line in f:
-            files.append(line)
+    file_list = open('test_posetemp_imglist.txt')
+    files = file_list.readlines()
+    fiel_list.close()
 
-    for file in files:   
+    for file in files:
+        print(file) 
         img = io.imread(os.path.join('test/', file))
         if len(img.shape)==2:
             gray_count = gray_count+1
             continue
-        print("555")
         img_rsz = rsz(img)
         images[count] = img_rsz
         id_labels[count] = file.split("/")[0]
