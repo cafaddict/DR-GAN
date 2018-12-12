@@ -57,7 +57,11 @@ def DataLoader(image_dir):
         img_rsz = rsz(img)
         images[count] = img_rsz
         id_labels[count] = int(file[1:7])
-        pose_labels[count] = (count % 30) // 10
+        pose = (count % 30) // 10
+        if pose == 0:
+            pose_labels[count] = 0
+        else:
+            pose_labels[count] = 1
         count = count + 1
 
     id_labels = id_labels.astype('int64')
@@ -70,14 +74,16 @@ def DataLoader(image_dir):
     # B x H x W x C-> B x C x H x W
     images = images.transpose(0, 3, 1, 2)
 
-    images = images[:gray_count*-1]
-    id_labels = id_labels[:gray_count*-1]
-    pose_labels = pose_labels[:gray_count*-1]
+    if gray_count != 0:
+        images = images[:gray_count*-1]
+        id_labels = id_labels[:gray_count*-1]
+        pose_labels = pose_labels[:gray_count*-1]
+
     Nd = 368
-    Np = 3
+    Np = 2
     Nz = 50
     channel_num = 3
-    print([images, id_labels, pose_labels, Nd, Np, Nz, channel_num])
+
     return [images, id_labels, pose_labels, Nd, Np, Nz, channel_num]
 
 
