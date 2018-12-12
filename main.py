@@ -52,21 +52,24 @@ def DataLoader(image_dir):
     pose_labels = np.zeros(7000)
     count = 0
     gray_count = 0
+
+    files = []
     with open('test_posetemp_imglist.txt') as f:
         for line in f:
-            img_path = os.path.join('test/', line)
-            print(img_path)
-            img = io.imread(img_path)
-            if len(img.shape)==2:
-                gray_count = gray_count+1
-                continue
-            print("555")
-            img_rsz = rsz(img)
-            images[count] = img_rsz
-            id_labels[count] = line.split("/")[0]
-            pose_labels[count] = ((count % 30) // 10) / 2
-            print([id_labels[count], pose_labels[count]])
-            count = count + 1
+            files.append(line)
+
+    for file in files:   
+        img = io.imread(os.path.join('test/', file))
+        if len(img.shape)==2:
+            gray_count = gray_count+1
+            continue
+        print("555")
+        img_rsz = rsz(img)
+        images[count] = img_rsz
+        id_labels[count] = file.split("/")[0]
+        pose_labels[count] = ((count % 30) // 10) / 2
+        print([id_labels[count], pose_labels[count]])
+        count = count + 1
 
 
     id_labels = id_labels.astype('int64')
