@@ -35,31 +35,22 @@ def DataLoader(image_dir):
     Np : the number of discrete pose in the data
     Nz : size of noise vector (Default in the paper is 50)
     """
-    # Nd = []
-    # Np = []
-    # Nz = []
-    # channel_num = []
-    # images = []
-    # id_labels = []
-    # pose_labels = []
 
-    # Demo
-    # image_dir = "cfp-dataset/Data/Images/"
+    # VggFace2
+    file_list = open('test_posetemp_imglist.txt')
+    files = file_list.readlines()
+    file_list.close()
+
     rsz = ResizeDemo(110)
 
-    images = np.zeros((7000, 110, 110, 3))
-    id_labels = np.zeros(7000)
-    pose_labels = np.zeros(7000)
+    images = np.zeros((len(files), 110, 110, 3))
+    id_labels = np.zeros(len(files))
+    pose_labels = np.zeros(len(files))
     count = 0
     gray_count = 0
 
-    file_list = open('test_posetemp_imglist.txt')
-    files = file_list.readlines()
-    fiel_list.close()
-
     for file in files:
-        print(file) 
-        img = io.imread(os.path.join('test/', file))
+        img = io.imread(os.path.join('test/', file[:-1]))
         if len(img.shape)==2:
             gray_count = gray_count+1
             continue
