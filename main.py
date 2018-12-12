@@ -56,7 +56,7 @@ def DataLoader(image_dir):
             continue
         img_rsz = rsz(img)
         images[count] = img_rsz
-        id_labels[count] = file.split("/")[0]
+        id_labels[count] = int(file[1:7])
         pose_labels[count] = ((count % 30) // 10) / 2
         print([id_labels[count], pose_labels[count]])
         count = count + 1
